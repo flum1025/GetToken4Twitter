@@ -20,7 +20,7 @@ $ ruby gettoken.rb
 ```
 
 
-質問等ありましたらTwitter:@flum_(https://twitter.com/flum_)までお願いします。
+質問等ありましたらTwitter:[@flum_](https://twitter.com/flum_)までお願いします。
 
 ##License
 
