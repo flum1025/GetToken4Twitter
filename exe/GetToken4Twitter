@@ -1,0 +1,46 @@
+require 'oauth'
+require 'optparse'
+require 'GetToken4Twitter/version'
+
+def oauth(key, secret)
+  consumer = OAuth::Consumer.new(key, secret,{
+    :site=>"https://api.twitter.com"
+  })
+  request_token = consumer.get_request_token
+
+  puts "Please access this URL",
+    "\t#{request_token.authorize_url}",
+    "and get the Pin code."
+
+  access_token = request_token.get_access_token(oauth_verifier: ask(:pin_code))
+
+  puts "",
+    "consumer_key:\t\t#{key}",
+    "consumer_secret:\t#{secret}",
+    "access_token:\t\t#{access_token.token}",
+    "access_token_secret:\t#{access_token.secret}"
+end
+
+def ask(key)
+  print "Enter your #{key}: "
+  gets.chomp
+end
+
+opt = OptionParser.new
+opt.version = GetToken4Twitter::VERSION
+args = {}
+opt.on('-c', '--consumer_key VALUE'){|v|args[:consumer_key] = v}
+opt.on('-s', '--consumer_secret VALUE'){|v|args[:consumer_secret] = v}
+
+begin
+  opt.parse!(ARGV)
+rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
+  STDERR.puts e.message
+  exit false
+end
+
+if args[:consumer_key] && args[:consumer_secret]
+  oauth(args[:consumer_key], args[:consumer_secret])
+else
+  oauth(ask(:consumer_key), ask(:consumer_secret))
+end
